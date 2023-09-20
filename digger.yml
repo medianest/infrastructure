@@ -1,0 +1,29 @@
+projects:
+- name: DNS
+  dir: dns
+  workflow: dns
+- name: GitHub
+  dir: github
+  workflow: github
+workflows:
+  dns:
+    env_vars:
+      state: &state_env_vars
+        - name: ARM_ACCESS_KEY
+          value_from: DIGGER_BACKEND_ARM_ACCESS_KEY
+      commands:
+        - name: CLOUDFLARE_EMAIL
+          value_from: DTF_DNS_CLOUDFLARE_EMAIL
+        - name: CLOUDFLARE_API_KEY
+          value_from: DTF_DNS_CLOUDFLARE_API_KEY
+    workflow_configuration: &apply_on_merge
+      on_pull_request_pushed: ["digger plan"]
+      on_pull_request_closed: ["digger unlock"]
+      on_commit_to_default: ["digger apply"]
+  github:
+    env_vars:
+      state: *state_env_vars
+      commands:
+        - name: GITHUB_TOKEN
+          value_from: DTF_GITHUB_GITHUB_TOKEN
+    workflow_configuration: *apply_on_merge
