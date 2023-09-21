@@ -12,8 +12,10 @@ on:
 jobs:
   format:
     runs-on: ubuntu-latest
-    name: Terraform Format
+    name: Format
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
       - name: terraform fmt dns
         uses: dflook/terraform-fmt-check@v1
         with:
@@ -23,6 +25,7 @@ jobs:
         with:
           path: github
   digger:
+    name: Digger
     runs-on: ubuntu-latest
     steps:
       - name: Digger Run
