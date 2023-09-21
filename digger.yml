@@ -8,10 +8,12 @@ projects:
 workflows:
   dns:
     env_vars:
-      state: &state_env_vars
-        - name: ARM_ACCESS_KEY
+      state:
+        - &azurerm_state_env_vars 
+          name: ARM_ACCESS_KEY
           value_from: DIGGER_BACKEND_ARM_ACCESS_KEY
       commands:
+        - *azurerm_state_env_vars
         - name: CLOUDFLARE_EMAIL
           value_from: DTF_DNS_CLOUDFLARE_EMAIL
         - name: CLOUDFLARE_API_KEY
@@ -22,8 +24,10 @@ workflows:
       on_commit_to_default: ["digger apply"]
   github:
     env_vars:
-      state: *state_env_vars
+      state:
+        - *azurerm_state_env_vars
       commands:
+        - *azurerm_state_env_vars
         - name: GITHUB_TOKEN
           value_from: DTF_GITHUB_GITHUB_TOKEN
     workflow_configuration: *apply_on_merge
