@@ -1,4 +1,4 @@
-name: Digger
+name: Terraform
 
 on:
   pull_request:
@@ -10,14 +10,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  run:
+  format:
+    runs-on: ubuntu-latest
+    name: Terraform Format
+    steps:
+      - name: terraform fmt dns
+        uses: dflook/terraform-fmt-check@v1
+        with:
+          path: dns
+      - name: terraform fmt github
+        uses: dflook/terraform-fmt-check@v1
+        with:
+          path: github
+  digger:
     runs-on: ubuntu-latest
     steps:
-      - name: digger run
+      - name: Digger Run
         uses: diggerhq/digger@v0.1.32
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           LOCK_PROVIDER: azure
           DIGGER_AZURE_AUTH_METHOD: CONNECTION_STRING
           DIGGER_AZURE_CONNECTION_STRING: ${{ secrets.DIGGER_AZURE_CONNECTION_STRING }}
